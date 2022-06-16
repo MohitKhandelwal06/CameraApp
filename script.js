@@ -12,7 +12,7 @@ let constraints={
     video:true
 };
 
-
+var uid = new ShortUniqueId();
 let shouldRecord=false;
 navigator.mediaDevices.getUserMedia(constraints)
 .then((stream)=>{
@@ -38,11 +38,25 @@ navigator.mediaDevices.getUserMedia(constraints)
         let videoURL=URL.createObjectURL(blob);
         console.log(videoURL);
 
-        let a=document.createElement('a');
-        a.href=videoURL;
-        a.download="myVideo.mp4";
-        a.click();
+        // let a=document.createElement('a');
+        // a.href=videoURL;
+        // a.download="myVideo.mp4";
+        // a.click();
+
         // store in database
+        if(db){
+            let videoId=uid();
+            let dbTransaction=db.transaction('video','readwrite');
+            let videoStore=dbTransaction.objectStore('video');
+            let videoEntry={
+                id:videoId,
+                url:videoURL,
+            };
+            let addrequest=videoStore.add(videoEntry);
+            addrequest.onsuccess=()=>{
+                console.log("video added to db successfully");
+            };
+        }
     })
 });
 
@@ -71,6 +85,19 @@ captureBtnCont.addEventListener('click',()=>{
     // let img=document.createElement("img");
     // img.src=imageURL;
     // document.body.append(img);
+
+    if(db){
+        let imageId=uid();
+        let dbTransaction=db.transaction('image','readwrite');
+        let imageStore=dbTransaction.objectStore('image');
+        let imageEntry={
+            id:imageId,
+            url:imageURL,
+        };
+        let addrequest=imageStore.add(imageEntry);
+        addrequest.onsuccess=()=>{console.log("image added to db successfully");};
+    }
+
 
     // removing animation from button
     setTimeout(()=>{
@@ -138,6 +165,8 @@ let filters=document.querySelectorAll('.filter');
 let filterLayer=document.querySelector('filter-layer');
 
 filters.forEach((filterElem) => {
-
-    transparentColor=filterElem.getComputedStyle()
+    filterElem.addEventListener('click',()=>{
+        transparentColor=filterElem.getComputedStyle(filterElem).getPropertyValue('background-color');
+    filterLayer.style.backgroundColor=transparentColor;
+    });
 });

@@ -10,12 +10,13 @@ h1{
     text-align: center;
     font-family: cursive;
     margin-top: 0;
+    padding-top:2rem;
 }
 .show-area{
     display:flex;
-    background-color:beige;
-    justify-content:center;
-    align-items:center;
+    /* background-color:beige; */
+    justify-content:space-between;
+    flex-wrap:wrap;
 }
 .back-button-cont{
    position: fixed;
@@ -32,25 +33,42 @@ h1{
 }
 
 .container{
-   height: 100vh;
+   /* height: 100vh; */
    width: 100vw;
    background-color: grey;
 }
 
-.img-cont{
+.media-cont{
     margin: 2rem;
-    border: 15px solid grey;
-    display: flex;
-    flex-direction: column;
-    align-items : center;
+    /* height: 15rem; */
+    width: 15rem;
+    border: 15px solid whitesmoke;
+}
+.media-cont>div{
+    width: 100%;
+    height:100%;
+    object-fit: contain;
 }
 img{
-    width: 25rem;
-    /* height: 25rem; */
+    width: 100%;
+    /* height:100%; */
+}
+.action-btn{
+    color:white;
+    height: 2rem;
+    display:flex;
+    justify-content:center;
+    align-items : center;
+}
+.download{
+    background-color:red;
+}
+.delete{
+    background-color:black;
 }
 .back-button-cont:hover{
     cursor: pointer;
 }
-.img-cont>div:hover{
+.media-cont>div:hover{
     cursor: pointer;
 }
