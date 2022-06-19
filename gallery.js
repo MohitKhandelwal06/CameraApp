@@ -1,3 +1,8 @@
+let backBtn = document.querySelector(".back-button");
+backBtn.addEventListener("click", () => {
+  location.assign("./index.html");
+});
+
 setTimeout(()=>{
     if(db){
     let imageDBTransaction=db.transaction('image','readonly');
@@ -15,13 +20,19 @@ setTimeout(()=>{
             imageElem.innerHTML=`
             <div>
             <img src="${url}" />
-            
+            </div>
             <div class="delete action-btn">DELETE</div>
             <div class="download action-btn" >DOWNLOAD</div>
-            </div>
+            
             `;
     
             galleryCont.appendChild(imageElem);
+
+            let deleteBtn = imageElem.querySelector(".delete");
+            deleteBtn.addEventListener("click", deleteListener);
+
+            let downloadBtn = imageElem.querySelector(".download");
+            downloadBtn.addEventListener("click", downloadListener);
         });
     }
     
@@ -41,22 +52,77 @@ setTimeout(()=>{
             videoElem.innerHTML=`
             <div>
             <video autoplay loop src="${url}" ></video>
-            
+            </div>
             <div class="delete action-btn">DELETE</div>
             <div class="download action-btn ">DOWNLOAD</div>
-            </div>
+            
             `;
     
             galleryCont.appendChild(videoElem);
+
+            let deleteBtn = videoElem.querySelector(".delete");
+            deleteBtn.addEventListener("click", deleteListener);
+
+            let downloadBtn = videoElem.querySelector(".download");
+            downloadBtn.addEventListener("click", downloadListener);
         });
     }
 }
 },100);
 
-function deleteListner(){
-
+function deleteListener(e){
+    console.log('working');
+    let id = e.target.parentElement.getAttribute("id");
+    console.log(id);
+    let type = id.split("-")[0];
+    console.log(type);
+    if (type == "vid") {
+    //remove from database
+    let videoDBTransacrtion = db.transaction("video", "readwrite");
+    let videoStore = videoDBTransacrtion.objectStore("video");
+    videoStore.delete(id);
+    } else if (type == "img") {
+    //remove from database
+    let imageDBTransacrtion = db.transaction("image", "readwrite");
+    let imageStore = imageDBTransacrtion.objectStore("image");
+    imageStore.delete(id);
+    }
+    //remove from ui
+    e.target.parentElement.remove();
 }
 
-function downloadListner(){
-
+function downloadListener(e){
+    console.log('working');
+    let id = e.target.parentElement.getAttribute("id");
+    let type = id.split("-")[0];
+    if (type == "vid") {
+      let videoDBTransacrtion = db.transaction("video", "readonly");
+      let videoStore = videoDBTransacrtion.objectStore("video");
+      let videoRequest = videoStore.get(id);
+      videoRequest.onsuccess = () => {
+        let videoResult = videoRequest.result;
+        let url = URL.createObjectURL(videoResult.blobData);
+  
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "video.mp4";
+        a.click();
+  
+      }
+    }
+  
+    if (type == "img") {
+      let imageDBTransacrtion = db.transaction("image", "readonly");
+      let imageStore = imageDBTransacrtion.objectStore("image");
+      let imageRequest = imageStore.get(id);
+      imageRequest.onsuccess = () => {
+        let imageResult = imageRequest.result;
+        let imageURL = imageResult.url;
+  
+        let a = document.createElement("a");
+        a.href = imageURL;
+        a.download = "pic.png";
+        a.click();
+      };
+    }
 }

@@ -49,7 +49,7 @@ navigator.mediaDevices.getUserMedia(constraints)
             let dbTransaction=db.transaction('video','readwrite');
             let videoStore=dbTransaction.objectStore('video');
             let videoEntry={
-                id:videoId,
+                id:`vid-${videoId}`,
                 url:videoURL,
             };
             let addrequest=videoStore.add(videoEntry);
@@ -91,7 +91,7 @@ captureBtnCont.addEventListener('click',()=>{
         let dbTransaction=db.transaction('image','readwrite');
         let imageStore=dbTransaction.objectStore('image');
         let imageEntry={
-            id:imageId,
+            id:`img-${imageId}`,
             url:imageURL,
         };
         let addrequest=imageStore.add(imageEntry);
@@ -169,4 +169,9 @@ filters.forEach((filterElem) => {
         transparentColor=filterElem.getComputedStyle(filterElem).getPropertyValue('background-color');
     filterLayer.style.backgroundColor=transparentColor;
     });
+});
+
+let gallery = document.querySelector(".gallery");
+gallery.addEventListener("click", () => {
+    location.assign("./gallery.html");
 });
