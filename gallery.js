@@ -48,7 +48,7 @@ setTimeout(()=>{
             let videoElem=document.createElement('div');
             videoElem.setAttribute('class','media-cont');
             videoElem.setAttribute('id',videoObj.id);
-            let url=videoObj.url;
+            let url=URL.createObjectURL(videoObj.blobData);
             videoElem.innerHTML=`
             <div>
             <video autoplay loop src="${url}" ></video>

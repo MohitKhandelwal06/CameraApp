@@ -50,7 +50,7 @@ navigator.mediaDevices.getUserMedia(constraints)
             let videoStore=dbTransaction.objectStore('video');
             let videoEntry={
                 id:`vid-${videoId}`,
-                url:videoURL,
+                blobData:blob,
             };
             let addrequest=videoStore.add(videoEntry);
             addrequest.onsuccess=()=>{
